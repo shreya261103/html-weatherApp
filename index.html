@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Weather App</title>
+    <style>
+        body {
+            font-family: 'Arial', sans-serif;
+            text-align: center;
+            background-image: url('https://images.pexels.com/photos/1118873/pexels-photo-1118873.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1'); 
+            background-size:cover;
+            background-position: center;
+            background-repeat:repeat;
+            color: #fcfafa; 
+        }
+        h1 {
+            font-size: 80px;
+        }
+
+        div {
+            font-size:40px;
+        }
+
+        #weather-container {
+            margin-top: 50px;
+            background-color: rgba(0, 0, 0, 0.7); 
+            padding: 15px;
+            border-radius: 10px;
+        }
+
+        input {
+            padding: 15px;
+            margin-right: 5px;
+            margin-top: 100px;
+        }
+
+        button {
+            padding: 7px;
+            cursor: pointer;
+            color: rgb(2, 26, 27);
+        }
+    </style>
+</head>
+<body>
+
+    <h1>Weather App</h1>
+
+    <div>
+        <label for="city">Enter City:</label>
+        <input type="text" id="city" placeholder="Enter city name">
+        <button onclick="getWeather()">Get Weather</button>
+    </div>
+
+    <div id="weather-container">
+       
+    </div>
+
+    <script>
+        function getWeather() {
+            const apiKey = '2141653f40cc72e5305bf3495c9caec1'; 
+            const city = document.getElementById('city').value;
+
+            if (!city) {
+                alert('Please enter a city name');
+                return;
+            }
+
+            const apiUrl = `https://api.openweathermap.org/data/2.5/weather?q=${city}&appid=${apiKey}`;
+
+            fetch(apiUrl)
+                .then(response => response.json())
+                .then(data => {
+                    displayWeather(data);
+                })
+                .catch(error => {
+                    console.error('Error fetching weather data:', error);
+                    alert('Error fetching weather data. Please try again.');
+                });
+        }
+
+        function displayWeather(data) {
+            const weatherContainer = document.getElementById('weather-container');
+
+            const temperature = Math.round(data.main.temp - 273.15);
+            const description = data.weather[0].description;
+            const icon = `http://openweathermap.org/img/w/${data.weather[0].icon}.png`;
+
+            const html = `
+                <h2>${data.name}, ${data.sys.country}</h2>
+                <img src="${icon}" alt="Weather Icon">
+                <p>${description}</p>
+                <p>Temperature: ${temperature}°C</p>
+            `;
+
+            weatherContainer.innerHTML = html;
+        }
+    </script>
+
+</body>
+</html>
